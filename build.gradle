@@ -14,11 +14,44 @@
 */
 
 apply plugin: "java"
-apply plugin: "eclipse"
-apply plugin: "maven"
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    options.encoding = 'UTF-8'
+}
+
+sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDir
+
+
+//-----------------------------------------
+
 
 apply plugin:'application'
 mainClassName = "foo.bar.Main"
+
+
+
+//-----------------------------------------
+
+apply plugin: 'eclipse'
+
+eclipse {
+    classpath {
+        /*
+            1. This is the default behavior, https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.eclipse.model.EclipseClasspath.html#org.gradle.plugins.ide.eclipse.model.EclipseClasspath:downloadSources
+            2. if not work, try by clearing /~[user]/.gradle/caches/*.*
+        */
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+
+//-----------------------------------------
+
+apply plugin: "maven"
 
 ext {
     maven_group_id = "foo"
@@ -45,14 +78,11 @@ artifacts {
     archives javadocJar
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 dependencies {
     compile "org.apache.pdfbox:pdfbox:2.0.8"
     compile "org.apache.pdfbox:pdfbox-tools:2.0.8"
+    compile "log4j:log4j:1.2.17"
+
     testCompile "junit:junit:4.12"
 }
-
-
-
